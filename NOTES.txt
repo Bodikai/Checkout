@@ -3,10 +3,15 @@ TO DO:
 
 PHASE 1
 
-1) Create Git repository
-2) Create barebones Ruby files
-3) Create specs for example cases in brief
+1) DONE Create Git repository
+2) DONE Create barebones Ruby files
+3) IN PROGRESS Create specs for example cases in brief
 4) Break down requirements into tasks:
+    * Rule for BOGO offer on Fruit Tea
+    * Reduced price from $5.00 to $4.50 for 3 or more Apples
+    * System for setting up pricing rules rather than special cases
+    * Initialize method should take pricing_rules parameter
+      * Think about how this parameter is formatted
     * 
 5) 
 
@@ -21,4 +26,5 @@ Re-factor with SINGLE RESPONSIBILITY in mind:
 
 REMEMBER:
 
+  * Single responsibility
   * Each spec should only test ONE THING
