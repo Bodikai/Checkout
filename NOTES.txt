@@ -1,0 +1,24 @@
+TO DO:
+------
+
+PHASE 1
+
+1) Create Git repository
+2) Create barebones Ruby files
+3) Create specs for example cases in brief
+4) Break down requirements into tasks:
+    * 
+5) 
+
+
+
+PHASE 2
+
+Re-factor with SINGLE RESPONSIBILITY in mind:
+  * Any method that is doing more than one thing should be split up into
+    separate classes (each with a method for doing that one thing).
+  * Raise errors rather than return errors as strings.
+
+REMEMBER:
+
+  * Each spec should only test ONE THING
