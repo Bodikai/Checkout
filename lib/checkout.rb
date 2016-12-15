@@ -57,6 +57,10 @@ class Checkout
     @items = []
   end
 
+  def format_total
+    "#{product.currency}#{'%.02f' % @total_price}"
+  end
+
   def generate_total
     for i in 0...@items.length
       @total_price += @pricing_rules.price(@items, @items[i], occurrence(i))
@@ -76,9 +80,9 @@ class Checkout
   end
 
   def total
-    puts "----------------------"
+    puts ""
     generate_total
-    puts "Total: $#{'%.02f' % @total_price}"
-    "#{product.currency}#{'%.02f' % @total_price}"
+    puts "Total: #{format_total}"
+    format_total
   end
 end
