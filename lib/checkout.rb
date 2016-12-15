@@ -8,28 +8,28 @@ class PricingRules
     @rules[item][0]
   end
 
+  def buy_one_get_one?(item, occurrence)
+    offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
+  end
+
   def currency
     @currency
   end
 
+  def bundle_discount?(items, item)
+    offer_type(item) == "bundle_discount" && items.count(item) >= @rules[item][2]
+  end
+
   def offer_type(item)
-    offer_name = nil
-    if @rules.include?(item)
-      if @rules.fetch(item)[1] == "buy_one_get_one"
-        offer_name = "buy_one_get_one"
-      elsif @rules.fetch(item)[1] == "multiple_discount"
-        offer_name = "multiple_discount"
-      end
-    end
-    offer_name
+    @rules.fetch(item)[1]
   end
 
   def price(items, item, occurrence)
-    if offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
+    if buy_one_get_one?(item, occurrence)
       puts "#{item} 1 x #{currency}#{'%.02f' % 0} Buy one get one free"
       return 0
-    elsif offer_type(item) == "multiple_discount" && items.count(item) >= @rules[item][2]
-      puts "#{item} 1 x #{currency}#{'%.02f' % @rules[item][3]} Discount for #{@rules[item][2]} or more"
+    elsif bundle_discount?(items, item)
+      puts "#{item} 1 x #{currency}#{'%.02f' % @rules[item][3]} Bundle discount for #{@rules[item][2]} or more"
       return @rules[item][3]
     end
     puts "#{item} 1 x #{currency}#{'%.02f' % base_price(item)}"
@@ -49,7 +49,7 @@ class Checkout
   end
 
   def generate_total
-    for i in 0...@items.length
+    for i in 0...@items.size
       @total_price += @pricing_rules.price(@items, @items[i], occurrence(i))
     end
   end
