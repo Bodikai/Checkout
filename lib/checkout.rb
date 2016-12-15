@@ -16,8 +16,8 @@ class PricingRules
     @currency
   end
 
-  def bundle_discount?(items, item)
-    offer_type(item) == "bundle_discount" && items.count(item) >= @rules[item][2]
+  def bulk_discount?(items, item)
+    offer_type(item) == "bulk_discount" && items.count(item) >= @rules[item][2]
   end
 
   def offer_type(item)
@@ -26,13 +26,13 @@ class PricingRules
 
   def price(items, item, occurrence)
     if buy_one_get_one?(item, occurrence)
-      puts "#{item} 1 x #{currency}#{'%.02f' % 0} Buy one get one free"
+      # puts "#{item} 1 x #{currency}#{'%.02f' % 0} Buy one get one free"
       return 0
-    elsif bundle_discount?(items, item)
-      puts "#{item} 1 x #{currency}#{'%.02f' % @rules[item][3]} Bundle discount for #{@rules[item][2]} or more"
+    elsif bulk_discount?(items, item)
+      # puts "#{item} 1 x #{currency}#{'%.02f' % @rules[item][3]} Bulk discount for #{@rules[item][2]} or more"
       return @rules[item][3]
     end
-    puts "#{item} 1 x #{currency}#{'%.02f' % base_price(item)}"
+    # puts "#{item} 1 x #{currency}#{'%.02f' % base_price(item)}"
     base_price(item)
   end
 end
@@ -63,9 +63,9 @@ class Checkout
   end
 
   def total
-    puts ""
+    # puts ""
     generate_total
-    puts "Total: #{format_total}"
+    # puts "Total: #{format_total}"
     format_total
   end
 end
