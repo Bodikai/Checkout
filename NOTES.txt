@@ -15,7 +15,7 @@ PHASE 1
       * DONE Think about how this parameter is formatted
     * Re-factor once the above is implemented
       * Single-responsibility
-      * Go through item list only ONCE and apply offers when necessary
+      * DONE Go through item list only ONCE and apply offers when necessary
         rather than doing it twice (subtracting offers 2nd time)
       * Pass prices as parameter rather than hard-code them
       * Possibly combine PricingRules and Products classes?
