@@ -2,7 +2,9 @@ require "checkout"
 
 describe Checkout do
 
-  let(:pricing_rules) { PricingRules.new({"FR1" => "BOGO"}) }
+  let(:pricing_rules) { PricingRules.new(
+    {"FR1" => "buy_one_get_one",
+     "AP1" => ["multiple_discount", 3, 4.50]}) }
   let(:checkout) { Checkout.new(pricing_rules) }
 
   context "given an empty basket" do
@@ -39,9 +41,37 @@ describe Checkout do
     end
   end
 
+  context "given a basket including two items with a three-item discount offer" do
+    it "returns the correct total NOT taking discount offer into account" do
+      checkout.scan("AP1")
+      checkout.scan("CF1")
+      checkout.scan("FR1")
+      checkout.scan("AP1")
+      expect(checkout.total).to eql("$24.34")
+    end
+  end
+
   context "given a basket including three items with a discount offer" do
     it "returns the correct total taking the discount offer into account" do
+      checkout.scan("AP1")
+      checkout.scan("AP1")
+      checkout.scan("FR1")
+      checkout.scan("AP1")
+      expect(checkout.total).to eql("$16.61")
+    end
+  end
 
+  context "given a basket including seven items with a discount offer" do
+    it "returns the correct total taking the discount offer into account" do
+      checkout.scan("AP1")
+      checkout.scan("AP1")
+      checkout.scan("FR1")
+      checkout.scan("AP1")
+      checkout.scan("AP1")
+      checkout.scan("AP1")
+      checkout.scan("AP1")
+      checkout.scan("AP1")
+      expect(checkout.total).to eql("$34.61")
     end
   end
 

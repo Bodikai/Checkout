@@ -3,15 +3,33 @@ class PricingRules
     @rules = rules
   end
 
-  def offer(item)
+  def offer_type(item)
+    offer_name = nil
     if @rules.include?(item)
-      if @rules.fetch(item) == "BOGO"
-        return "BOGO"
+      if @rules.fetch(item) == "buy_one_get_one"
+        offer_name = "buy_one_get_one"
+      elsif @rules.fetch(item)[0] == "multiple_discount"
+        offer_name = "multiple_discount"
       end
     end
-    return nil
+    return offer_name
   end
 
+  def offer_price(items, item, occurrence)
+    if offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
+      puts "Offer applied: -$#{'%.02f' % product.price(item)} (#{item} BOGO)"
+      return product.price(item)
+    elsif offer_type(item) == "multiple_discount" && items.count(item) >= @rules[item][1]
+      puts "Offer applied: -$#{'%.02f' % (product.price(item) - @rules[item][2])} (#{item} MD)"
+      return product.price(item) - @rules[item][2]
+    end
+    puts "No offer: (#{item})"
+    0
+  end
+
+  def product
+    Products.new
+  end
 end
 
 class Products
@@ -43,21 +61,17 @@ class Checkout
     Products.new
   end
 
+  def occurrence(i)
+    @items[0..i].count(@items[i])
+  end
+
   def offers_total
     deduction = 0
     items = @items.clone
     for i in 0...items.length
-      if @pricing_rules.offer(items[i]) == "BOGO"
-        for j in i+1...items.length
-          if items[j] == items[i]
-            deduction += product.price(items[i])
-            puts "Offer deduction subtotal: $#{deduction.round(2)} (#{items[j]} #{@pricing_rules.offer(items[j])})"
-            items[j] = ""
-            break
-          end
-        end
-      end
+      deduction += @pricing_rules.offer_price(items, items[i], occurrence(i))
     end
+    puts "Deduction total: -$#{'%.02f' % deduction}"
     deduction
   end
 
@@ -77,7 +91,7 @@ class Checkout
   def total
     puts "----------------------"
     @total_price = '%.02f' % (total_before_offers - offers_total)
-    # puts "Final Total: $#{@total_price}"
+    puts "Final Total: $#{@total_price}"
     "#{product.get_currency}#{@total_price}"
   end
 end
