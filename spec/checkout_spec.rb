@@ -9,14 +9,14 @@ describe Checkout do
      "CF1" => [11.23]}) }
   let(:checkout) { Checkout.new(pricing_rules) }
 
-  context "given an empty basket" do
-    it "returns a Final Total of $0.00" do
+  context "given empty basket" do
+    it "returns $0.00" do
       expect(checkout.total).to eql("$0.00")
     end
   end
 
-  context "given a basket including two items with a BOGO offer" do
-    it "returns the correct total taking the BOGO offer into account" do
+  context "given basket including two items on BOGO offer" do
+    it "returns correct total" do
       checkout.scan("FR1")
       checkout.scan("AP1")
       checkout.scan("FR1")
@@ -25,16 +25,16 @@ describe Checkout do
     end
   end
 
-  context "given a basket only including two items with a BOGO offer" do
-    it "returns the correct total taking the BOGO offer into account" do
+  context "given basket with both items on BOGO offer" do
+    it "returns correct total taking BOGO offer into account" do
       checkout.scan("FR1")
       checkout.scan("FR1")
       expect(checkout.total).to eql("$3.11")
     end
   end
 
-  context "given a basket only including four items with a BOGO offer" do
-    it "returns the correct total taking the BOGO offer into account twice" do
+  context "given basket only including four items on BOGO offer" do
+    it "returns correct total taking the BOGO offer into account twice" do
       checkout.scan("FR1")
       checkout.scan("FR1")
       checkout.scan("FR1")
@@ -43,8 +43,8 @@ describe Checkout do
     end
   end
 
-  context "given a basket including two items with a three-item discount offer" do
-    it "returns the correct total NOT taking discount offer into account" do
+  context "given basket including two items on 3-item bundle discount offer" do
+    it "returns correct total NOT taking discount offer into account" do
       checkout.scan("AP1")
       checkout.scan("CF1")
       checkout.scan("FR1")
@@ -53,8 +53,8 @@ describe Checkout do
     end
   end
 
-  context "given a basket including three items with a discount offer" do
-    it "returns the correct total taking the discount offer into account" do
+  context "given basket including three items on bundle discount offer" do
+    it "returns correct total taking bundle offer into account" do
       checkout.scan("AP1")
       checkout.scan("AP1")
       checkout.scan("FR1")
@@ -63,8 +63,8 @@ describe Checkout do
     end
   end
 
-  context "given a basket including seven items with a discount offer" do
-    it "returns the correct total taking the discount offer into account" do
+  context "given basket including seven items on 3-item bundle discount offer" do
+    it "returns correct total taking bundle offer into account" do
       checkout.scan("AP1")
       checkout.scan("AP1")
       checkout.scan("FR1")
