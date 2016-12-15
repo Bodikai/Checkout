@@ -7,12 +7,18 @@ PHASE 1
 2) DONE Create barebones Ruby files
 3) IN PROGRESS Create specs for example cases in brief
 4) Break down requirements into tasks:
-    * Rule for BOGO offer on Fruit Tea
-    * Reduced price from $5.00 to $4.50 for 3 or more Apples
-    * System for setting up pricing rules rather than special cases
-    * Initialize method should take pricing_rules parameter
-      * Think about how this parameter is formatted
-    * 
+    * DONE Rule for BOGO offer on Fruit Tea
+    * DONE Reduced price from $5.00 to $4.50 for 3 or more Apples
+    * DONE System for setting up pricing rules rather than special cases
+      embedded in code.
+    * DONE Initialize method should take pricing_rules parameter
+      * DONE Think about how this parameter is formatted
+    * Re-factor once the above is implemented
+      * Single-responsibility
+      * Go through item list only ONCE and apply offers when necessary
+        rather than doing it twice (subtracting offers 2nd time)
+      * Pass prices as parameter rather than hard-code them
+      * Possibly combine PricingRules and Products classes?
 5) 
 
 

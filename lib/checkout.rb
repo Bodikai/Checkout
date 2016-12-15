@@ -12,19 +12,19 @@ class PricingRules
         offer_name = "multiple_discount"
       end
     end
-    return offer_name
+    offer_name
   end
 
-  def offer_price(items, item, occurrence)
+  def price(items, item, occurrence)
     if offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
-      puts "Offer applied: -$#{'%.02f' % product.price(item)} (#{item} BOGO)"
-      return product.price(item)
+      puts "#{item} 1 x #{product.currency}#{'%.02f' % 0} Buy one get one free"
+      return 0
     elsif offer_type(item) == "multiple_discount" && items.count(item) >= @rules[item][1]
-      puts "Offer applied: -$#{'%.02f' % (product.price(item) - @rules[item][2])} (#{item} MD)"
-      return product.price(item) - @rules[item][2]
+      puts "#{item} 1 x #{product.currency}#{'%.02f' % @rules[item][2]} Discount for 3 or more"
+      return @rules[item][2]
     end
-    puts "No offer: (#{item})"
-    0
+    puts "#{item} 1 x #{product.currency}#{'%.02f' % product.price(item)}"
+    product.price(item)
   end
 
   def product
@@ -41,7 +41,7 @@ class Products
     @currency = "$"
   end
 
-  def get_currency
+  def currency
     @currency
   end
 
@@ -51,47 +51,34 @@ class Products
 end
 
 class Checkout
-  def initialize(rules)
-    @pricing_rules = rules
+  def initialize(pricing_rules)
+    @pricing_rules = pricing_rules
     @total_price = 0
     @items = []
   end
 
-  def product
-    Products.new
+  def generate_total
+    for i in 0...@items.length
+      @total_price += @pricing_rules.price(@items, @items[i], occurrence(i))
+    end
   end
 
   def occurrence(i)
     @items[0..i].count(@items[i])
   end
 
-  def offers_total
-    deduction = 0
-    items = @items.clone
-    for i in 0...items.length
-      deduction += @pricing_rules.offer_price(items, items[i], occurrence(i))
-    end
-    puts "Deduction total: -$#{'%.02f' % deduction}"
-    deduction
+  def product
+    Products.new
   end
 
   def scan(item)
     @items << item
   end
 
-  def total_before_offers
-    total = 0
-    @items.each do |i|
-      total += product.price(i)
-      puts "Subtotal: $#{total.round(2)} (#{i})"
-    end
-    total
-  end
-
   def total
     puts "----------------------"
-    @total_price = '%.02f' % (total_before_offers - offers_total)
-    puts "Final Total: $#{@total_price}"
-    "#{product.get_currency}#{@total_price}"
+    generate_total
+    puts "Total: $#{'%.02f' % @total_price}"
+    "#{product.currency}#{'%.02f' % @total_price}"
   end
 end
