@@ -28,3 +28,4 @@ REMEMBER:
 
   * Single responsibility
   * Each spec should only test ONE THING
+  * For IRB testing: irb -r ./lib/checkout.rb

@@ -76,8 +76,8 @@ class Checkout
 
   def total
     puts "----------------------"
-    @total_price = (total_before_offers - offers_total).round(2)
-    puts "Final Total: $#{@total_price.round(2)}"
+    @total_price = '%.02f' % (total_before_offers - offers_total)
+    # puts "Final Total: $#{@total_price}"
     "#{product.get_currency}#{@total_price}"
   end
 end
