@@ -1,5 +1,4 @@
 class Offers
-
   def initialize(rules)
     @rules = rules
   end
@@ -8,30 +7,35 @@ class Offers
     @rules[item][0]
   end
 
-  def bulk_discount(items, item)
-    if offer_type(item) == "bulk_discount" && items.count(item) >= @rules[item][2]
-      return @rules[item][3]
-    end
-    nil
+  def bulk_discount_applicable?(items, item)
+    is_offer_type?(item, "bulk_discount") && items.count(item) >= @rules[item][2]
   end
 
-  def buy_one_get_one(item, occurrence)
-    if offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
-      return 0
-    end
-    nil
+  def buy_one_get_one_offer_applicable?(item, occurrence)
+    is_offer_type?(item, "buy_one_get_one") && occurrence % 2 == 0
+  end
+
+  def is_offer_type?(item, offer_name)
+    @rules.fetch(item)[1] == offer_name
   end
 
   def offer_price(items, item, occurrence)
     price = nil
-    price ||= buy_one_get_one(item, occurrence)
-    price ||= bulk_discount(items, item)
+    price ||= price_if_buy_one_get_one_offer(item, occurrence)
+    price ||= price_if_bulk_discount_offer(items, item)
     price ||= base_price(item)
-    price
   end
 
-  def offer_type(item)
-    @rules.fetch(item)[1]
+  def price_if_bulk_discount_offer(items, item)
+    if bulk_discount_applicable?(items, item)
+      return @rules[item][3]
+    end
+  end
+
+  def price_if_buy_one_get_one_offer(item, occurrence)
+    if buy_one_get_one_offer_applicable?(item, occurrence)
+      return 0
+    end
   end
 end
 
@@ -80,9 +84,7 @@ class Checkout
   end
 
   def total
-    # puts ""
     generate_total
-    # puts "Total: #{format_total}"
     format_total
   end
 end
