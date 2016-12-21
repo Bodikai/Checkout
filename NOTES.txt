@@ -5,7 +5,7 @@ PHASE 1
 
 1) DONE Create Git repository
 2) DONE Create barebones Ruby files
-3) IN PROGRESS Create specs for example cases in brief
+3) DONE Create specs for example cases in brief
 4) Break down requirements into tasks:
     * DONE Rule for BOGO offer on Fruit Tea
     * DONE Reduced price from $5.00 to $4.50 for 3 or more Apples
@@ -17,9 +17,9 @@ PHASE 1
       * Single-responsibility
       * DONE Go through item list only ONCE and apply offers when necessary
         rather than doing it twice (subtracting offers 2nd time)
-      * Pass prices as parameter rather than hard-code them
-      * Possibly combine PricingRules and Products classes?
-5) 
+      * DONE Pass prices as parameter rather than hard-code them
+      * DONE Possibly combine PricingRules and Products classes?
+5) DONE Re-factor for SR.
 
 
 
