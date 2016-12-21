@@ -1,24 +1,33 @@
 class Offers
+
+  def initialize(rules)
+    @rules = rules
+  end
+
   def base_price(item)
     @rules[item][0]
   end
 
-  def bulk_discount?(items, item)
-    offer_type(item) == "bulk_discount" && items.count(item) >= @rules[item][2]
-  end
-
-  def buy_one_get_one?(item, occurrence)
-    offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
-  end
-
-  def offer_price(rules, items, item, occurrence)
-    @rules = rules
-    if buy_one_get_one?(item, occurrence)
-      return 0
-    elsif bulk_discount?(items, item)
+  def bulk_discount(items, item)
+    if offer_type(item) == "bulk_discount" && items.count(item) >= @rules[item][2]
       return @rules[item][3]
     end
-    base_price(item)
+    nil
+  end
+
+  def buy_one_get_one(item, occurrence)
+    if offer_type(item) == "buy_one_get_one" && occurrence % 2 == 0
+      return 0
+    end
+    nil
+  end
+
+  def offer_price(items, item, occurrence)
+    price = nil
+    price ||= buy_one_get_one(item, occurrence)
+    price ||= bulk_discount(items, item)
+    price ||= base_price(item)
+    price
   end
 
   def offer_type(item)
@@ -37,11 +46,11 @@ class PricingRules
   end
 
   def offers
-    Offers.new
+    Offers.new(@rules)
   end
 
   def price(items, item, occurrence)
-    offers.offer_price(@rules, items, item, occurrence)
+    offers.offer_price(items, item, occurrence)
   end
 end
 
