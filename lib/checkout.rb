@@ -78,10 +78,8 @@ class Checkout
   end
 
   def generate_total
-    for i in 0...@items.size
-      #replace for loop with EACH with INDEX
-      @total_price += @pricing_rules.price(@items, @items[i], occurrence(i))
-    end
+    @items.each_with_index { |item, i|
+      @total_price += @pricing_rules.price(@items, @items[i], occurrence(i)) }
   end
 
   def occurrence(i)

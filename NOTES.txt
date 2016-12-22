@@ -36,8 +36,7 @@ PHASE 3 - After Paul's feedback
     than nil
   * Class PricingRules: Consider replacing this with class for products which
     contains rules for which offers are applicable to it
-  * generate_total method (Checkout class):
-    * Replace FOR loop with EACH with INDEX
+  DONE * generate_total method (Checkout class): Replace FOR loop w/each_with_index
   * Create specs for each class and the important methods (separate file per
     class)
 
