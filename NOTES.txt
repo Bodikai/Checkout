@@ -21,14 +21,25 @@ PHASE 1
       * DONE Possibly combine PricingRules and Products classes?
 5) DONE Re-factor for SR.
 
-
-
 PHASE 2
 
 Re-factor with SINGLE RESPONSIBILITY in mind:
   * Any method that is doing more than one thing should be split up into
     separate classes (each with a method for doing that one thing).
   * Raise errors rather than return errors as strings.
+
+PHASE 3 - After Paul's feedback
+
+  * Create classes for offers and relevant checks
+  * Use CASE statement in offer_price method (Offers class)
+  * Make the price offer methods (Offers class) always return something other
+    than nil
+  * Class PricingRules: Consider replacing this with class for products which
+    contains rules for which offers are applicable to it
+  * generate_total method (Checkout class):
+    * Replace FOR loop with EACH with INDEX
+  * Create specs for each class and the important methods (separate file per
+    class)
 
 REMEMBER:
 

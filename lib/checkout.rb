@@ -7,6 +7,8 @@ class Offers
     @rules[item][0]
   end
 
+  # Create classes for offers and relevant checks
+
   def bulk_discount_applicable?(items, item)
     is_offer_type?(item, "bulk_discount") && items.count(item) >= @rules[item][2]
   end
@@ -20,6 +22,7 @@ class Offers
   end
 
   def offer_price(items, item, occurrence)
+    # Use CASE statement
     price = nil
     price ||= price_if_buy_one_get_one_offer(item, occurrence)
     price ||= price_if_bulk_discount_offer(items, item)
@@ -27,12 +30,15 @@ class Offers
   end
 
   def price_if_bulk_discount_offer(items, item)
+    # Always have this return something OTHER than nil
     if bulk_discount_applicable?(items, item)
       return @rules[item][3]
     end
   end
 
   def price_if_buy_one_get_one_offer(item, occurrence)
+    # Always have this return something OTHER than nil
+
     if buy_one_get_one_offer_applicable?(item, occurrence)
       return 0
     end
@@ -40,13 +46,15 @@ class Offers
 end
 
 class PricingRules
+  # consider replacing this with class for products which contains rules for which
+  # offers are applicable to it
+
   def initialize(rules)
     @rules = rules
-    @currency = @rules["Currency"]
   end
 
   def currency
-    @currency
+    @rules.fetch("Currency")  
   end
 
   def offers
@@ -71,6 +79,7 @@ class Checkout
 
   def generate_total
     for i in 0...@items.size
+      #replace for loop with EACH with INDEX
       @total_price += @pricing_rules.price(@items, @items[i], occurrence(i))
     end
   end
