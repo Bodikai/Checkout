@@ -51,27 +51,32 @@ class Offers
     @rules.fetch(item)[1] == offer_name
   end
 
-  def offer_price(items, item, occurrence)
-    # Use CASE statement
-    price = nil
-    price ||= price_if_buy_one_get_one_offer(item, occurrence)
-    price ||= price_if_bulk_discount_offer(items, item)
-    price ||= base_price(item)
-  end
-
-  def price_if_bulk_discount_offer(items, item)
-    # Always have this return something OTHER than nil
+  def get_offer_type(items, item, occurrence)
     if bulk_discount_applicable?(items, item)
-      return @rules[item][3]
+      return "bulk_discount"
+    elsif buy_one_get_one_offer_applicable?(item, occurrence)
+      return "buy_one_get_one"
+    end
+    return "none"
+  end
+
+  def offer_price(items, item, occurrence)
+    case get_offer_type(items, item, occurrence)
+    when "bulk_discount"
+      return bulk_discount_price(item)
+    when "buy_one_get_one"
+      return buy_one_get_one_price
+    else
+      return base_price(item)
     end
   end
 
-  def price_if_buy_one_get_one_offer(item, occurrence)
-    # Always have this return something OTHER than nil
+  def bulk_discount_price(item)
+    @rules[item][3]
+  end
 
-    if buy_one_get_one_offer_applicable?(item, occurrence)
-      return 0
-    end
+  def buy_one_get_one_price
+    0
   end
 end
 
