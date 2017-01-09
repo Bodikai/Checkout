@@ -1,3 +1,33 @@
+class Checkout
+  def initialize(pricing_rules)
+    @pricing_rules = pricing_rules
+    @total_price = 0
+    @items = []
+  end
+
+  def format_total
+    "#{@pricing_rules.currency}#{'%.02f' % @total_price}"
+  end
+
+  def generate_total
+    @items.each_with_index { |item, i|
+      @total_price += @pricing_rules.price(@items, @items[i], occurrence(i)) }
+  end
+
+  def occurrence(i)
+    @items[0..i].count(@items[i])
+  end
+
+  def scan(item)
+    @items << item
+  end
+
+  def total
+    generate_total
+    format_total
+  end
+end
+
 class Offers
   def initialize(rules)
     @rules = rules
@@ -63,35 +93,5 @@ class PricingRules
 
   def price(items, item, occurrence)
     offers.offer_price(items, item, occurrence)
-  end
-end
-
-class Checkout
-  def initialize(pricing_rules)
-    @pricing_rules = pricing_rules
-    @total_price = 0
-    @items = []
-  end
-
-  def format_total
-    "#{@pricing_rules.currency}#{'%.02f' % @total_price}"
-  end
-
-  def generate_total
-    @items.each_with_index { |item, i|
-      @total_price += @pricing_rules.price(@items, @items[i], occurrence(i)) }
-  end
-
-  def occurrence(i)
-    @items[0..i].count(@items[i])
-  end
-
-  def scan(item)
-    @items << item
-  end
-
-  def total
-    generate_total
-    format_total
   end
 end
