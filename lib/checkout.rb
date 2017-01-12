@@ -1,4 +1,8 @@
 class Checkout
+
+  attr_reader :total_price
+  attr_reader :items
+
   def initialize(pricing_rules)
     @pricing_rules = pricing_rules
     @total_price = 0
