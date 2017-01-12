@@ -3,8 +3,8 @@ require "checkout"
 describe Checkout do
 
   let(:pricing_rules) { PricingRules.new(
-    {"Currency" => "$",
-     "FR1" => [3.11, "buy_one_get_one"],
+    "$",
+    { "FR1" => [3.11, "buy_one_get_one"],
      "AP1" => [5.00, "bulk_discount", 3, 4.50],
      "CF1" => [11.23]}) }
   let(:co) { Checkout.new(pricing_rules) }
