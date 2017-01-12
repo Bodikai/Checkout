@@ -28,24 +28,19 @@ class Checkout
   end
 end
 
-############ CURRENTLY RE-FACTORING FOLLOWING CLASS
-
 class PricingRules
-  def initialize(currency, rules)
+  def initialize(currency, all_rules)
     @currency = currency
-    @products = initialize_products(rules)
+    @products = initialize_products(all_rules)
   end
 
   def currency
     @currency
   end
 
-  def initialize_products(rules)
-    products = []
-    rules.each do |product_code, product_rules|
-      products << new_product(product_code, product_rules)
-    end
-    products
+  def initialize_products(all_rules)
+    all_rules.map { |product_code, product_rules| 
+      new_product(product_code, product_rules)}
   end
 
   def new_product(product_code, product_rules)
