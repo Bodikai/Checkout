@@ -28,10 +28,9 @@ class Checkout
   end
 end
 
-class PricingRules
-  # consider replacing this with class for products which contains
-  # rules for which offers are applicable to it
+############ CURRENTLY RE-FACTORING FOLLOWING CLASS
 
+class PricingRules
   def initialize(currency, rules)
     @currency = currency
     @products = initialize_products(rules)
@@ -59,22 +58,37 @@ class PricingRules
         return product.price(items, item, occurrence)
       end
     end
-    # NOTE: What happens if product not found?
+    0
   end
 end
 
-class BulkDiscountOffer
-  def initialize(bulk_threshold)
-    @bulk_threshold = bulk_threshold
+class EmptyOffer
+  def initialize(product_rules)
+    @offer_price = 0
   end
 
-  def apply?(items, item)
+  def applies?(items, item, occurrence)
+    false
+  end
+
+  def offer_price
+    @offer_price
+  end
+end
+
+class BulkDiscountOffer < EmptyOffer
+  def initialize(product_rules)
+    @bulk_threshold = product_rules[2]
+    @offer_price = product_rules[3]
+  end
+
+  def applies?(items, item, occurrence)
     items.count(item) >= @bulk_threshold
   end
 end
 
-class BuyOneGetOneOffer
-  def apply?(occurrence)
+class BuyOneGetOneOffer < EmptyOffer
+  def applies?(items, item, occurrence)
     occurrence % 2 == 0
   end
 end
@@ -82,40 +96,45 @@ end
 class Product
   def initialize(product_code, product_rules)
     @product_code = product_code
+    @product_rules = product_rules
     @base_price = product_rules[0]
-    if product_rules.length > 1
-      @offer_type = product_rules[1]
-      if @offer_type == "bulk_discount"
-        @bulk_threshold = product_rules[2]
-        @offer_price = product_rules[3]
-      elsif @offer_type == "buy_one_get_one"
-        @offer_price = 0
-      end
+    @offer = offer_type(product_rules[1])
+  end
+
+  def bulk_discount_offer
+    BulkDiscountOffer.new(@product_rules)
+  end
+
+  def buy_one_get_one_offer
+    BuyOneGetOneOffer.new(@product_rules)
+  end
+
+  def empty_offer
+    EmptyOffer.new(@product_rules)
+  end
+
+  def offer_applies?(items, item, occurrence)
+    @offer.applies?(items, item, occurrence)
+  end
+
+  def offer_type(offer)
+    case offer
+    when "bulk_discount"
+      return bulk_discount_offer
+    when "buy_one_get_one"
+      return buy_one_get_one_offer
     end
+    empty_offer
   end
 
   def price(items, item, occurrence)
-    if @offer_type == "bulk_discount" && bulk_discount.apply?(items, item)
-      return @offer_price
-    elsif @offer_type == "buy_one_get_one" && buy_one_get_one.apply?(occurrence)
-      return @offer_price
+    if offer_applies?(items, item, occurrence)
+      return @offer.offer_price
     end
     @base_price
   end
 
   def product_code
     @product_code
-  end
-
-  def offer_applies?
-
-  end
-
-  def bulk_discount
-    BulkDiscountOffer.new(@bulk_threshold)
-  end
-
-  def buy_one_get_one
-    BuyOneGetOneOffer.new
   end
 end

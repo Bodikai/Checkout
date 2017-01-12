@@ -30,11 +30,8 @@ Re-factor with SINGLE RESPONSIBILITY in mind:
 
 PHASE 3 - After Paul's feedback
 
-  * Create classes for offers and relevant checks
-  * Use CASE statement in offer_price method (Offers class)
-  * Make the price offer methods (Offers class) always return
-    something other than nil
-  * Class PricingRules: Consider replacing this with class for
+  DONE * Create classes for offers and relevant checks
+  DONE * Class PricingRules: Consider replacing this with class for
     products which contains rules for which offers are applicable
     to it
   DONE * generate_total method (Checkout class): Replace FOR loop w/
